@@ -28,17 +28,19 @@ export default function Home() {
   const onSubmit: SubmitHandler<Input> = async (data) => {
     reset();
 
-    if (!isValidKey(data.apiKey)) {
+    const key = data.apiKey.trim();
+
+    if (!isValidKey(key)) {
       setDetails(`Invalid API Key.`);
       setPage("bad");
       return;
     }
 
     setPage(`loading`);
-    setKey(data.apiKey);
+    setKey(key);
     const res = await fetch("https://api.openai.com/v1/models", {
       headers: {
-        Authorization: `Bearer ${data.apiKey}`,
+        Authorization: `Bearer ${key}`,
       },
     });
 
@@ -53,6 +55,11 @@ export default function Home() {
 
     if (models.data.find((model: any) => model.id === "gpt-4")) {
       setPage("good");
+      if (models.data.find((model: any) => model.id === "gpt-4-32k")) {
+        setDetails("Your key has GPT-4 + GPT-4 32K Access!");
+      } else {
+        setDetails("Your key has GPT-4 Access!");
+      }
       return;
     }
 
@@ -70,13 +77,13 @@ export default function Home() {
     <main className="h-screen bg-black text-white flex justify-center flex-col items-center">
       {key ? <p className="text-zinc-500 mb-12">{maskKey(key)}</p> : <></>}
       {page === "home" ? (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center md:space-x-4 flex-col md:flex-row m-4 md:m-0">
           <Image
             src="/GPT-4.png"
             width={150}
             height={150}
             alt="GPT-4"
-            className="rounded-full ml-4"
+            className="rounded-full"
           />
           <div>
             <h1 className="font-semibold text-2xl">GPT-4 API Access Checker</h1>
@@ -113,9 +120,7 @@ export default function Home() {
         <>
           <FaCheck size={50} className="" />
 
-          <h1 className="mt-8 text-2xl font-semibold">
-            Your key has GPT-4 Access!
-          </h1>
+          <h1 className="mt-8 text-2xl font-semibold">{details}</h1>
 
           <button
             onClick={() => returnHome()}
