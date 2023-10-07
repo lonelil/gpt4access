@@ -16,9 +16,9 @@ function maskKey(key: string) {
   return maskedKey;
 }
 
-function isValidKey(key: string) {
+/*function isValidKey(key: string) {
   return key.startsWith("sk-") && key.length === 51 ? true : false;
-}
+}*/
 
 export default function Home() {
   const { register, handleSubmit, reset } = useForm<Input>();
@@ -30,11 +30,11 @@ export default function Home() {
 
     const key = data.apiKey.trim();
 
-    if (!isValidKey(key)) {
+    /*if (!isValidKey(key)) {
       setDetails(`Invalid API Key.`);
       setPage("bad");
       return;
-    }
+    }*/
 
     setPage(`loading`);
     setKey(key);
